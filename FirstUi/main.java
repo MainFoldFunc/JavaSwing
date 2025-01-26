@@ -133,32 +133,31 @@ public class main {
   }
 
   static boolean checkIfCorrect(String login, String password) {
-    String pathToFile = "Users" + File.separator + "user" + login + ".txt";
-    File usrFile = new File(pathToFile);
-    if (usrFile.exists()) {
-      try (Scanner filescan = new Scanner(usrFile)) {
-        String corrpass = filescan.nextLine().trim();
-        String corrlogin = filescan.nextLine().trim();
-         // debug option //
-        System.out.println(corrpass);
-        System.out.println(corrlogin);
+      String pathToFile = "Users" + File.separator + "user" + login + ".txt";
+      File usrFile = new File(pathToFile);
+      if (usrFile.exists()) {
+          try (Scanner filescan = new Scanner(usrFile)) {
+              String corrlogin = filescan.nextLine().trim(); // Correct order
+              String corrpass = filescan.nextLine().trim();  // Correct order
 
-        boolean returnS = true;
+              // debug option
+              System.out.println("Stored Login: " + corrlogin);
+              System.out.println("Stored Password: " + corrpass);
 
-        if(login.equals(corrlogin) && password.equals(corrpass)) {
-          returnS = true;
-        }
-        else {
-          returnS = false;
-        }
-        System.out.println(returnS);
-        return returnS;
-      } catch (Exception e) {
-        e.printStackTrace();
+              if (login.equals(corrlogin) && password.equals(corrpass)) {
+                  System.out.println("Login successful");
+                  return true;
+              } else {
+                  System.out.println("Incorrect credentials");
+                  return false;
+              }
+          } catch (Exception e) {
+              e.printStackTrace();
+          }
       }
-    }
-    return false; // File doesn't exist or credentials don't match
+      return false; // File doesn't exist or credentials don't match
   }
+
 
   static class Button extends JButton {
     public Button(String text) {

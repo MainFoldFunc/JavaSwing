@@ -8,7 +8,7 @@ import (
 
 func main() {
   
-  http.HandleFunc("/signin", routeSignIn.SigninHandler)
+  http.HandleFunc("/signin", routeSignIn.SignInHandler)
 
   err := http.ListenAndServe(":8080", nil)
   if err != nil {

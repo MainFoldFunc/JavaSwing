@@ -55,8 +55,6 @@ func LoginCheckHandler(w http.ResponseWriter, r *http.Request) {
   }
 
   // Log the received login and password
-  fmt.Println("Received Login: ", creds.Login)
-  fmt.Println("Received Password: ", creds.Password)
 
   if creds.Login == "" || creds.Password == "" {
     http.Error(w, "Login and password cannot be empty", http.StatusBadRequest)

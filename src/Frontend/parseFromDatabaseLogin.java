@@ -11,7 +11,7 @@ public class parseFromDatabaseLogin {
     HttpURLConnection connection = null;
 
     try {
-      URL url = new URL("http://localhost:8080/login");  // Adjust endpoint if needed
+      URL url = new URL("http://localhost:8080/loginCheck");  // Adjust endpoint if needed
       connection = (HttpURLConnection) url.openConnection();
 
       // Set up request properties
@@ -31,6 +31,7 @@ public class parseFromDatabaseLogin {
       try (OutputStream os = connection.getOutputStream()) {
         byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
         os.write(input, 0, input.length);
+        System.out.println("Message send");
       }
 
       // Read response

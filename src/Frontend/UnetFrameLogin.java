@@ -50,13 +50,14 @@ public class UnetFrameLogin extends JFrame implements ActionListener {
 
       LoginInput.setText("");
       PassInput.setText("");
+      
+      boolean LoggedIn = LoginCheck(Login, Password);
 
-      LoginCorr, PasswordCorr = LoginCheck(Login, Password);
-
-      if (LoginCorr.equals(Login) && PasswordCorr.equals(Password)) {
-        System.out.println("Logged in correctly");
+      if (LoggedIn) {
+        System.out.println("Logged in succesfully");
         // new UnetFrame();
       }
+
 
     }
     else if (e.getSource() == SignIn) {

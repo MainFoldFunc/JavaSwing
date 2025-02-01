@@ -78,13 +78,6 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Hash the password before storing
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(creds.Password), bcrypt.DefaultCost)
-	if err != nil {
-		http.Error(w, "Failed to process password", http.StatusInternalServerError)
-		return
-	}
-
 	// Insert into database (using hashed password)
 	_, err = db.Exec("INSERT INTO users (login, password) VALUES (?, ?)",
 		creds.Login,

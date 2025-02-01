@@ -52,7 +52,7 @@ public class UnetFrameLogin extends JFrame implements ActionListener {
         
         if (LoggedIn) {
           System.out.println("Logged in succesfully");
-          // new UnetFrame();
+          new UnetFramePostLogScreen();
         }
       }
 

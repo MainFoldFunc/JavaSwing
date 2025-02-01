@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"time"
 
-	"golang.org/x/crypto/bcrypt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-sql-driver/mysql" // Import the MySQL driver properly
 )
 
 type Credentials struct {
@@ -25,18 +25,15 @@ var db *sql.DB
 
 func init() {
 	var err error
-	// Replace with your MySQL credentials
 	db, err = sql.Open("mysql", "go_user:strong_password@tcp(localhost:3306)/my_go_app")
 	if err != nil {
 		log.Fatal("Database connection failed:", err)
 	}
 
-	// Configure connection pool settings if needed
 	db.SetMaxOpenConns(25)
 	db.SetMaxIdleConns(25)
 	db.SetConnMaxLifetime(5 * time.Minute)
 
-	// Verify connection
 	err = db.Ping()
 	if err != nil {
 		log.Fatal("Database ping failed:", err)
@@ -44,7 +41,6 @@ func init() {
 
 	fmt.Println("Connected to MySQL database")
 
-	// Create the 'users' table if it does not exist
 	createTableQuery := `
 	CREATE TABLE IF NOT EXISTS users (
 		id INT AUTO_INCREMENT PRIMARY KEY,
@@ -72,19 +68,20 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Basic input validation
 	if creds.Login == "" || creds.Password == "" {
 		http.Error(w, "Login and password cannot be empty", http.StatusBadRequest)
 		return
 	}
 
-	// Insert into database (using hashed password)
-	_, err = db.Exec("INSERT INTO users (login, password) VALUES (?, ?)",
-		creds.Login,
-		string(hashedPassword),
-	)
+	// Insert user credentials into database (no hashing)
+	_, err := db.Exec("INSERT INTO users (login, password) VALUES (?, ?)", creds.Login, creds.Password)
 	if err != nil {
-		http.Error(w, "Failed to save credentials", http.StatusInternalServerError)
+		// Check if the error is a duplicate entry (MySQL error code 1062)
+		if mysqlErr, ok := err.(*mysql.MySQLError); ok && mysqlErr.Number == 1062 {
+			http.Error(w, "User already exists", http.StatusConflict)
+		} else {
+			http.Error(w, "Failed to save credentials", http.StatusInternalServerError)
+		}
 		log.Printf("Database insert error: %v", err)
 		return
 	}

@@ -46,17 +46,19 @@ public class UnetFrameLogin extends JFrame implements ActionListener {
         String Password = PassInput.getText();
         System.out.println(Login);
         System.out.println(Password);
+
+        parseFromDatabaseLogin parser = new parseFromDatabaseLogin();
+        boolean LoggedIn = parser.loginCheck(Login, Password);
+        
+        if (LoggedIn) {
+          System.out.println("Logged in succesfully");
+          // new UnetFrame();
+        }
       }
 
       LoginInput.setText("");
       PassInput.setText("");
-      
-      boolean LoggedIn = LoginCheck(Login, Password);
 
-      if (LoggedIn) {
-        System.out.println("Logged in succesfully");
-        // new UnetFrame();
-      }
 
 
     }

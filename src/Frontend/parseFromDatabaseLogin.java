@@ -5,7 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-public class ParseFromDatabaseLogin {
+public class parseFromDatabaseLogin {
 
   public boolean loginCheck(String login, String password) {
     HttpURLConnection connection = null;
@@ -64,13 +64,6 @@ public class ParseFromDatabaseLogin {
         connection.disconnect();
       }
     }
-  }
-
-  // Example usage
-  public static void main(String[] args) {
-    ParseFromDatabaseLogin loginRequest = new ParseFromDatabaseLogin();
-    boolean isValidUser = loginRequest.loginCheck("user123", "secretPassword");
-    System.out.println("Login successful: " + isValidUser);
   }
 }
 

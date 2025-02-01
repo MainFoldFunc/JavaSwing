@@ -9,7 +9,6 @@ import (
   "time"
 
   _ "github.com/go-sql-driver/mysql"
-  "golang.org/x/crypto/bcrypt"
 )
 
 type Credentials struct {
@@ -43,6 +42,7 @@ func init() {
 }
 
 func LoginCheckHandler(w http.ResponseWriter, r *http.Request) {
+  fmt.Println("Handler called")
   if r.Method != http.MethodPost {
     http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
     return
@@ -54,25 +54,25 @@ func LoginCheckHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
+  // Log the received login and password
+  fmt.Println("Received Login: ", creds.Login)
+  fmt.Println("Received Password: ", creds.Password)
+
   if creds.Login == "" || creds.Password == "" {
     http.Error(w, "Login and password cannot be empty", http.StatusBadRequest)
     return
   }
 
-  // Securely query for the stored password hash
-  var storedHash string
-  err := db.QueryRow("SELECT password_hash FROM users WHERE login = ?", creds.Login).Scan(&storedHash)
+  // ✅ Check if the user exists and matches the password
+  var exists bool
+  err := db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE login = ? AND password = ?)", creds.Login, creds.Password).Scan(&exists)
+
   if err != nil {
-    if err == sql.ErrNoRows {
-      http.Error(w, "Invalid login credentials", http.StatusUnauthorized)
-    } else {
-      http.Error(w, "Database error", http.StatusInternalServerError)
-    }
+    http.Error(w, "Database error", http.StatusInternalServerError)
     return
   }
 
-  // Compare the provided password with the stored hash
-  if bcrypt.CompareHashAndPassword([]byte(storedHash), []byte(creds.Password)) != nil {
+  if !exists {
     http.Error(w, "Invalid login credentials", http.StatusUnauthorized)
     return
   }

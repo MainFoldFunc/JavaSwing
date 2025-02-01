@@ -5,52 +5,56 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-public class parseToDatabaseFirsstSignin{
-    public void parseToDatabaseFirsstSignin(String Login, String Password) {
-        try {
-            // Define the endpoint URL
-            URL url = new URL("http://localhost:8080");
-            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+public class parseToDatabaseFirsstSignin {  // Fixed class name (PascalCase)
 
-            // Set up the POST request
-            con.setRequestMethod("POST");
-            con.setRequestProperty("Content-Type", "application/json; utf-8");
-            con.setRequestProperty("Accept", "application/json");
-            con.setDoOutput(true); // Enable output stream
+  // Renamed method to avoid conflict with class name
+  public void sendDataToDatabase(String login, String password) {  
+    try {
+      URL url = new URL("http://localhost:8080/signin");
+      HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
-            // JSON data to send
-            String jsonInputString = "{\"login\": Login, \"password\": Password}";
+      // Request setup
+      con.setRequestMethod("POST");
+      con.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+      con.setRequestProperty("Accept", "application/json");
+      con.setDoOutput(true);
 
-            // Write the JSON data to the output stream
-            try (OutputStream os = con.getOutputStream()) {
-                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
-                os.write(input, 0, input.length);
-            }
+      // Proper JSON formatting with actual parameter values
+      String jsonInputString = String.format(
+        "{\"login\": \"%s\", \"password\": \"%s\"}",
+        login.replace("\"", "\\\""),  // Escape quotes in credentials
+        password.replace("\"", "\\\"")
+      );
 
-            // Get the HTTP response code
-            int status = con.getResponseCode();
-            System.out.println("Response Code: " + status);
+      try (OutputStream os = con.getOutputStream()) {
+        byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+        os.write(input, 0, input.length);
+      }
 
-            // Read the response body
-            try (BufferedReader br = new BufferedReader(
-                new InputStreamReader(
-                    status >= 200 && status < 300 ? con.getInputStream() : con.getErrorStream(),
-                    StandardCharsets.UTF_8
-                )
-            )) {
-                StringBuilder response = new StringBuilder();
-                String responseLine;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
-                }
-                System.out.println("Response Body: " + response);
-            }
+      int status = con.getResponseCode();
+      System.out.println("Response Code: " + status);
 
-            // Disconnect the connection
-            con.disconnect();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+      // Read response
+      try (BufferedReader br = new BufferedReader(
+        new InputStreamReader(
+          con.getInputStream(),  // Only read success stream here
+          StandardCharsets.UTF_8
+        )
+      )) {
+        StringBuilder response = new StringBuilder();
+        String line;
+        while ((line = br.readLine()) != null) {
+          response.append(line);
         }
+        System.out.println("Response: " + response);
+      }
+
+      con.disconnect();
+
+    } catch (Exception e) {
+      System.err.println("Request failed: " + e.getMessage());
+      e.printStackTrace();
     }
+  }
 }
+

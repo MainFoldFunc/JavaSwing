@@ -75,7 +75,7 @@ func SignInHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Insert user credentials into database (no hashing)
-	_, err := db.Exec("INSERT INTO users (login, password, admin) VALUES (?, ?, ?)", creds.Login, creds.Password, admin(creds.Login))
+	_, err := db.Exec("INSERT INTO users (login, password) VALUES (?, ?, ?)", creds.Login, creds.Password, admin(creds.Login))
 	if err != nil {
 		// Check if the error is a duplicate entry (MySQL error code 1062)
 		if mysqlErr, ok := err.(*mysql.MySQLError); ok && mysqlErr.Number == 1062 {

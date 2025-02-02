@@ -49,10 +49,14 @@ public class UnetFrameLogin extends JFrame implements ActionListener {
 
         parseFromDatabaseLogin parser = new parseFromDatabaseLogin();
         boolean LoggedIn = parser.loginCheck(Login, Password);
+
+        AdminChieck adminChieck = new AdminChieck();
+        boolean isAdmin = adminChieck.loginCheck(Login, Password);
+        System.out.println("Admin permision: " + isAdmin);
         
         if (LoggedIn) {
           System.out.println("Logged in succesfully");
-          new UnetFramePostLogScreen();
+          // new UnetFrame();
         }
       }
 

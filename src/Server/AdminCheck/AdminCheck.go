@@ -12,12 +12,15 @@ import (
 )
 
 type Credentials struct {
-  Admin int    `json:"admin"`  // Changed to int since it's passed as a number in JSON
-  Login string `json:"login"`  // Fixed variable name to match JSON structure
+  Admin    int    `json:"admin"`    // admin field (to set admin status)
+  Login    string `json:"login"`    // Login field
+  Password string `json:"password"` // Password field
 }
 
 type Response struct {
+  Success bool   `json:"success"`
   Message string `json:"message"`
+  Admin   int    `json:"admin"`
 }
 
 var db *sql.DB
@@ -55,30 +58,33 @@ func AdminCheck(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  if creds.Admin == 0 {  // Checking if admin is 0, which may represent invalid data
-    http.Error(w, "Admin permission has to be added", http.StatusBadRequest)
-    return
-  }
+  // Check if credentials match the database and if password is correct
+  var dbPassword string
+  var adminStatus int
+  err := db.QueryRow("SELECT password, admin FROM users WHERE login = ?", creds.Login).Scan(&dbPassword, &adminStatus)
 
-  var exists bool
-  err := db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE login = ?)", creds.Login).Scan(&exists)
-  
   if err != nil {
-    http.Error(w, "Database error while checking user", http.StatusInternalServerError)
-    return
-  }
-  _, err_change := db.Exec("UPDATE users SET admin = 1 WHERE login = ?", creds.Login)
-  if err_change != nil {
-    http.Error(w, "Error while changing the user admin permission", http.StatusNotFound)
-    return
-  }
-
-  if !exists {
-    http.Error(w, "User does not exist", http.StatusNotFound)
+    if err == sql.ErrNoRows {
+      http.Error(w, "User does not exist", http.StatusNotFound)
+    } else {
+      http.Error(w, "Database error while checking user", http.StatusInternalServerError)
+    }
     return
   }
 
-  response := Response{Message: "Admin permission added successfully"}
+  if dbPassword != creds.Password {
+    http.Error(w, "Incorrect password", http.StatusUnauthorized)
+    return
+  }
+
+  fmt.Println("Tha hell is admin: %d", adminStatus)
+  // Send back the admin status (this should be the same value from the database)
+  response := Response{
+    Success: true,
+    Message: "Login successful",
+    Admin:   adminStatus,  // Admin status from database
+  }
+
   w.Header().Set("Content-Type", "application/json")
   json.NewEncoder(w).Encode(response)
 }

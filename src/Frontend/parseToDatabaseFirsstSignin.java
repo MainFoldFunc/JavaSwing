@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 public class parseToDatabaseFirsstSignin {  // Fixed class name (PascalCase)
 
   // Renamed method to avoid conflict with class name
-  public void sendDataToDatabase(String login, String password) {  
+  public void sendDataToDatabase(String login, String password, int admin) {  
     try {
       URL url = new URL("http://localhost:8080/signin");
       HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -19,13 +19,15 @@ public class parseToDatabaseFirsstSignin {  // Fixed class name (PascalCase)
       con.setRequestProperty("Accept", "application/json");
       con.setDoOutput(true);
 
-      // Proper JSON formatting with actual parameter values
+      // Proper JSON formatting without trailing commas
       String jsonInputString = String.format(
-        "{\"login\": \"%s\", \"password\": \"%s\"}",
-        login.replace("\"", "\\\""),  // Escape quotes in credentials
-        password.replace("\"", "\\\"")
+        "{\"login\": \"%s\", \"password\": \"%s\", \"admin\": %d}",  // Removed the quotes around admin
+        login, 
+        password,
+        admin
       );
 
+      // Send the request data
       try (OutputStream os = con.getOutputStream()) {
         byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
         os.write(input, 0, input.length);

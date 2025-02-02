@@ -39,8 +39,9 @@ public class UnetFrameSignin extends JFrame implements ActionListener {
       } else {
         String Login = LoginInput.getText();
         String Password = PassInput.getText();
+        int admin = 0;
         parseToDatabaseFirsstSignin parser = new parseToDatabaseFirsstSignin();
-        parser.sendDataToDatabase(Login, Password);
+        parser.sendDataToDatabase(Login, Password, admin);
       }
 
       LoginInput.setText("");

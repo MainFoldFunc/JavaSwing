@@ -67,6 +67,11 @@ func AdminCheck(w http.ResponseWriter, r *http.Request) {
     http.Error(w, "Database error while checking user", http.StatusInternalServerError)
     return
   }
+  _, err_change := db.Exec("UPDATE users SET admin = 1 WHERE login = ?", creds.Login)
+  if err_change != nil {
+    http.Error(w, "Error while changing the user admin permission", http.StatusNotFound)
+    return
+  }
 
   if !exists {
     http.Error(w, "User does not exist", http.StatusNotFound)

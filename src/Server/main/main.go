@@ -5,12 +5,14 @@ import (
   "net/http"
   "server/routeSignIn"
   "server/LoginCheck"
+  "server/AdminCheck"
 )
 
 func main() {
   
   http.HandleFunc("/signin", routeSignIn.SignInHandler)
   http.HandleFunc("/loginCheck", LoginCheck.LoginCheckHandler)
+  http.HandleFunc("/AdminCheck", AdminCheck.AdminCheck)
 
   err := http.ListenAndServe(":8080", nil)
   if err != nil {

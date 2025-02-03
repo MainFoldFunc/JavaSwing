@@ -17,6 +17,7 @@ type Credentials struct {
 }
 
 type Response struct {
+  Status  bool   `json:"status"`
   Message string `json:"message"`
 }
 
@@ -42,7 +43,7 @@ func init() {
 }
 
 func LoginCheckHandler(w http.ResponseWriter, r *http.Request) {
-  fmt.Println("Handler called")
+  fmt.Println("Handler Login check called")
   if r.Method != http.MethodPost {
     http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
     return
@@ -54,14 +55,11 @@ func LoginCheckHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  // Log the received login and password
-
   if creds.Login == "" || creds.Password == "" {
     http.Error(w, "Login and password cannot be empty", http.StatusBadRequest)
     return
   }
 
-  // ✅ Check if the user exists and matches the password
   var exists bool
   err := db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE login = ? AND password = ?)", creds.Login, creds.Password).Scan(&exists)
 
@@ -70,13 +68,15 @@ func LoginCheckHandler(w http.ResponseWriter, r *http.Request) {
     return
   }
 
-  if !exists {
-    http.Error(w, "Invalid login credentials", http.StatusUnauthorized)
-    return
+  var response Response
+  if exists {
+    response = Response{Status: true, Message: "success"}
+  } else {
+    response = Response{Status: false, Message: "failure"}
   }
 
-  response := Response{Message: "Login successful"}
   w.Header().Set("Content-Type", "application/json")
   json.NewEncoder(w).Encode(response)
+  fmt.Println("Response sent: ", response)
 }
 

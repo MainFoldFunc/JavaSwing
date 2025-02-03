@@ -39,36 +39,46 @@ public class UnetFrameLogin extends JFrame implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == LogIn) {
-      if (LoginInput.getText().equals("") || PassInput.getText().equals("") ) {
-        System.out.println("You need login and password");
-      } else {
-        String Login = LoginInput.getText();
-        String Password = PassInput.getText();
-        System.out.println(Login);
-        System.out.println(Password);
-
-        parseFromDatabaseLogin parser = new parseFromDatabaseLogin();
-        boolean LoggedIn = parser.loginCheck(Login, Password);
-
-        AdminChieck adminChieck = new AdminChieck();
-        boolean isAdmin = adminChieck.loginCheck(Login, Password);
-        System.out.println("Admin permision: " + isAdmin);
-        
-        if (LoggedIn) {
-          System.out.println("Logged in succesfully");
-          // new UnetFrame();
-        }
-      }
-
-      LoginInput.setText("");
-      PassInput.setText("");
-
-
-
-    }
-    else if (e.getSource() == SignIn) {
+      handleLogin();
+    } else if (e.getSource() == SignIn) {
       new UnetFrameSignin(); 
     }
   }
+
+  private void handleLogin() {
+    String loginText = LoginInput.getText();
+    String passwordText = PassInput.getText();
+    
+    if (loginText.isEmpty() || passwordText.isEmpty()) {
+      System.out.println("You need login and password");
+      return; // Prevent further processing if fields are empty
+    }
+
+    System.out.println(loginText);
+    System.out.println(passwordText);
+
+    parseFromDatabaseLogin parser = new parseFromDatabaseLogin();
+    boolean loggedIn = parser.loginCheck(loginText, passwordText);
+
+    AdminChieck adminChieck = new AdminChieck();
+    boolean isAdmin = adminChieck.loginCheck(loginText, passwordText);
+
+    System.out.println("Admin permission: " + isAdmin);
+    System.out.println("Logged in succesful: " + loggedIn);
+
+    if (loggedIn && isAdmin) {
+      System.out.println("Logged in as an Admin user");
+      // new AdminFrameUnet();
+    } else if (loggedIn) {
+      System.out.println("Logged in as a normal user");
+      // new UserFrameUnet();
+    } else {
+      System.out.println("Login or password not correct");
+    }
+
+    LoginInput.setText("");
+    PassInput.setText("");
+  }
+
 }
 

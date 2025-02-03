@@ -1,3 +1,4 @@
+package logingScreen;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -59,7 +60,7 @@ public class AdminChieck {
           } else if (responseBody.contains("\"admin\":0")) {
             return false;  // Admin is 0
           } else {
-            System.out.println("Tha fuck admin is not?");
+            System.out.println("Tha admin is not?");
           }
         }
       } else {

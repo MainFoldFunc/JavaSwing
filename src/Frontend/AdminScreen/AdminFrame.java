@@ -1,30 +1,35 @@
+package AdminFrame;
+
 import javax.swing.*;
 import java.awt.*;
-import java.ActionEvent;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class AdminFrame extends JFrame implements ActionListener {
 
-  Label StochShow;
+  private Label StockShow;
 
-  public adminFrame() {
+  public AdminFrame() {
     this.setSize(1920, 1080);
     this.setTitle("Unet");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setResizable(false);
-    this.getContentPane().setBackground(new Color(31, 33, 60));
+    this.getContentPane().setBackground(new Color(117, 69, 109));
     this.setLayout(null);
     this.setLocationRelativeTo(null);
 
-    StochShow = new Label(300, 300, 1000, 500);
-    this.add(StochShow);
+    // Add text to the label
+    StockShow = new Label( 150, 150, 1700, 1000);
+    this.add(StockShow);
 
-    this.setViasible(true);
+    System.out.println("The Admin frame is shown");
 
+    this.setVisible(true);
+  }
 
-    @Override
-    public voif actionPerformed(ActionEvent e) {
-      //TODO: Add logic when buttons und 
-    }
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    // TODO: Add button logic
   }
 }
+

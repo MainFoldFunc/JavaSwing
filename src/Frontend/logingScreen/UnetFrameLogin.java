@@ -1,3 +1,6 @@
+package logingScreen;
+
+import AdminFrame.AdminFrame;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -5,12 +8,13 @@ import java.awt.event.ActionListener;
 
 public class UnetFrameLogin extends JFrame implements ActionListener {
 
-  Button SignIn;
-  Button LogIn;
-  InputFrame LoginInput;
-  InputFrame PassInput;
+  private Button signInButton;
+  private Button logInButton;
+  private InputFrame loginInput;
+  private InputFrame passInput;
 
   public UnetFrameLogin() {
+    // Frame settings
     this.setSize(800, 800);
     this.setTitle("Login for UnetEngine");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -19,65 +23,75 @@ public class UnetFrameLogin extends JFrame implements ActionListener {
     this.setLayout(null);
     this.setLocationRelativeTo(null);
 
-    LoginInput = new InputFrame("Login", 250, 200, 300, 50);
-    this.add(LoginInput);
+    // Login input using custom InputFrame
+    loginInput = new InputFrame("Login", 250, 200, 300, 50);
+    this.add(createLabel("Login:", 250, 170, 300, 30));
+    this.add(loginInput);
 
-    PassInput = new InputFrame("Password", 250, 300, 300, 50);
-    this.add(PassInput); // ✅ Fixed: Now correctly adding PassInput
+    // Password input using custom InputFrame
+    passInput = new InputFrame("Password", 250, 300, 300, 50);
+    this.add(createLabel("Password:", 250, 270, 300, 30));
+    this.add(passInput);
 
-    LogIn = new Button("Login", 300, 500, 200, 50);
-    LogIn.addActionListener(this);
-    this.add(LogIn);
+    // Login button using custom Button class
+    logInButton = new Button("Login", 300, 500, 200, 50);
+    logInButton.addActionListener(this);
+    this.add(logInButton);
 
-    SignIn = new Button("Sign in", 300, 600, 200, 50); // ✅ Fixed: Adjusted Y position
-    SignIn.addActionListener(this);
-    this.add(SignIn); // ✅ Fixed: Now correctly adding SignIn
+    // Sign-in button using custom Button class
+    signInButton = new Button("Sign Up", 300, 600, 200, 50);
+    signInButton.addActionListener(this);
+    this.add(signInButton);
 
     this.setVisible(true);
   }
 
+  private JLabel createLabel(String text, int x, int y, int width, int height) {
+    JLabel label = new JLabel(text);
+    label.setBounds(x, y, width, height);
+    label.setForeground(Color.WHITE);
+    label.setFont(new Font("Arial", Font.BOLD, 16));
+    return label;
+  }
+
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (e.getSource() == LogIn) {
+    if (e.getSource() == logInButton) {
       handleLogin();
-    } else if (e.getSource() == SignIn) {
-      new UnetFrameSignin(); 
+    } else if (e.getSource() == signInButton) {
+      new UnetFrameSignin();
     }
   }
 
   private void handleLogin() {
-    String loginText = LoginInput.getText();
-    String passwordText = PassInput.getText();
-    
-    if (loginText.isEmpty() || passwordText.isEmpty()) {
-      System.out.println("You need login and password");
-      return; // Prevent further processing if fields are empty
-    }
+    String loginText = loginInput.getText();
+    String passwordText = passInput.getText(); // Use getText() for InputFrame
 
-    System.out.println(loginText);
-    System.out.println(passwordText);
+    if (loginText.isEmpty() || passwordText.isEmpty()) {
+      JOptionPane.showMessageDialog(this, "You need to enter both login and password.", "Error", JOptionPane.ERROR_MESSAGE);
+      return;
+    }
 
     parseFromDatabaseLogin parser = new parseFromDatabaseLogin();
     boolean loggedIn = parser.loginCheck(loginText, passwordText);
 
-    AdminChieck adminChieck = new AdminChieck();
-    boolean isAdmin = adminChieck.loginCheck(loginText, passwordText);
-
-    System.out.println("Admin permission: " + isAdmin);
-    System.out.println("Logged in succesful: " + loggedIn);
+    AdminChieck adminCheck = new AdminChieck();
+    boolean isAdmin = adminCheck.loginCheck(loginText, passwordText);
 
     if (loggedIn && isAdmin) {
-      System.out.println("Logged in as an Admin user");
-      //adminFrame();
+      System.out.println(("Logged in as an Admin user from UnetFrameLogin"));
+      new AdminFrame();
+      this.dispose(); // Close login window
     } else if (loggedIn) {
-      System.out.println("Logged in as a normal user");
+      JOptionPane.showMessageDialog(this, "Logged in as a regular user.", "Success", JOptionPane.INFORMATION_MESSAGE);
       // new UserFrameUnet();
+      this.dispose();
     } else {
-      System.out.println("Login or password not correct");
+      JOptionPane.showMessageDialog(this, "Incorrect login or password.", "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    LoginInput.setText("");
-    PassInput.setText("");
+    loginInput.setText("");
+    passInput.setText("");
   }
 
 }

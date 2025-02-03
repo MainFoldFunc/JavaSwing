@@ -68,7 +68,7 @@ public class UnetFrameLogin extends JFrame implements ActionListener {
 
     if (loggedIn && isAdmin) {
       System.out.println("Logged in as an Admin user");
-      // new AdminFrameUnet();
+      //adminFrame();
     } else if (loggedIn) {
       System.out.println("Logged in as a normal user");
       // new UserFrameUnet();

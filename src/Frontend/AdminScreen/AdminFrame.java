@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 
 public class AdminFrame extends JFrame implements ActionListener {
 
+  Label StochShow;
+
   public adminFrame() {
     this.setSize(1920, 1080);
     this.setTitle("Unet");
@@ -13,6 +15,11 @@ public class AdminFrame extends JFrame implements ActionListener {
     this.getContentPane().setBackground(new Color(31, 33, 60));
     this.setLayout(null);
     this.setLocationRelativeTo(null);
+
+    StochShow = new Label(300, 300, 1000, 500);
+    this.add(StochShow);
+
+    this.setViasible(true);
 
 
     @Override

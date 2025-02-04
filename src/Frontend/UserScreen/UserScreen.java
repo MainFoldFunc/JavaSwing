@@ -20,10 +20,10 @@ public class UserScreen extends JFrame implements ActionListener {
         this.setLayout(null);
         this.setLocationRelativeTo(null);
 
-        SearchUsers = new InputFrame("Search for users to chat with", 100, 100, 50, 200);
+        SearchUsers = new InputFrame("Search for users to chat with", 100, 100, 200, 50);
         this.add(SearchUsers);
 
-        SendSearchUsers = new Button("Search", 150, 310, 20, 20);
+        SendSearchUsers = new Button("Search", 310, 100, 150, 50);
         SendSearchUsers.addActionListener(this);
         this.add(SendSearchUsers);
 

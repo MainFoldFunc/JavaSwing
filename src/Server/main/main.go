@@ -6,6 +6,7 @@ import (
   "server/routeSignIn"
   "server/LoginCheck"
   "server/AdminCheck"
+  "server/searchUsers"
 )
 
 func main() {
@@ -13,6 +14,7 @@ func main() {
   http.HandleFunc("/signin", routeSignIn.SignInHandler)
   http.HandleFunc("/loginCheck", LoginCheck.LoginCheckHandler)
   http.HandleFunc("/AdminCheck", AdminCheck.AdminCheck)
+  http.HandleFunc("/searchUsers", searchUsers.SearchUsers)
 
   err := http.ListenAndServe(":8080", nil)
   if err != nil {

@@ -16,7 +16,7 @@ public class HandleSearchUsers {
     HttpURLConnection conn = null;
 
     try {
-      URL url = new URL("http://localhost:8080/searchUser");
+      URL url = new URL("http://localhost:8080/searchUsers");
       conn = (HttpURLConnection) url.openConnection();
 
       conn.setRequestMethod("POST");

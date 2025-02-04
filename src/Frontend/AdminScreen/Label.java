@@ -1,4 +1,4 @@
-package AdminFrame;
+package AdminScreen;
 
 import javax.swing.*;
 import java.awt.*;

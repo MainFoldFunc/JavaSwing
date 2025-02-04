@@ -1,6 +1,7 @@
 package logingScreen;
 
-import AdminFrame.AdminFrame;
+import AdminScreen.AdminFrame;
+import UserScreen.UserScreen;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -83,8 +84,8 @@ public class UnetFrameLogin extends JFrame implements ActionListener {
       new AdminFrame();
       this.dispose(); // Close login window
     } else if (loggedIn) {
-      JOptionPane.showMessageDialog(this, "Logged in as a regular user.", "Success", JOptionPane.INFORMATION_MESSAGE);
-      // new UserFrameUnet();
+      System.out.println("Logged in as A normal user");
+      new UserScreen();
       this.dispose();
     } else {
       JOptionPane.showMessageDialog(this, "Incorrect login or password.", "Error", JOptionPane.ERROR_MESSAGE);

@@ -22,13 +22,23 @@ class UserListPanel extends JPanel {
       userLabel.setFont(new Font("Arial", Font.BOLD, 20));
 
       // Button with ActionListener
-      JButton chatButton = new JButton("Chat");
-      chatButton.setPreferredSize(new Dimension(100, 30));
+      Button chatButton = new Button("Chat", 0, 0, 100, 30);
       chatButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
           // Set selected user in the parent window
           parentWindow.setSelectedUser(user);  // Call method from UserScreen
+          
+          // Print the selected user and userS from the parent window
+          System.out.println("Selected User from parentWindow: " + parentWindow.selectedUser);
+          System.out.println("UserS from parentWindow: " + parentWindow.userS);
+          NewChatReqest req = new NewChatReqest();
+          boolean err = req.newChatRequest(parentWindow.userS, parentWindow.selectedUser);
+          if (err != true) {
+            System.out.println("Something went wrong in the NewChatReqest");
+          }else {
+            System.out.println("Everything is ok you can proceed");
+          }
         }
       });
 
@@ -37,3 +47,4 @@ class UserListPanel extends JPanel {
     }
   }
 }
+

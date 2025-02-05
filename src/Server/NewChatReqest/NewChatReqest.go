@@ -13,9 +13,9 @@ import (
 )
 
 type Credentials struct {
-  UserS  string `json:"userS"`
-  UserR  string `json:"userR"`
-  Accept bool   `json:"accept"`
+  UserS  string `json:"UserS"`
+  UserR  string `json:"UserR"`
+  Accept bool   `json:"Accept"`
 }
 
 type Response struct {
@@ -58,6 +58,7 @@ func init() {
 }
 
 func NewChatReqest(w http.ResponseWriter, r *http.Request) {
+  fmt.Println("Handler NewChatReqestCalled")
   if r.Method != http.MethodPost {
     http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
     return
@@ -88,5 +89,6 @@ func NewChatReqest(w http.ResponseWriter, r *http.Request) {
   w.Header().Set("Content-Type", "application/json")
   w.WriteHeader(http.StatusCreated)
   json.NewEncoder(w).Encode(Response{Message: fmt.Sprintf("Chat request from user: %s registered successfully", creds.UserS)})
+  fmt.Println("Server done job")
 }
 

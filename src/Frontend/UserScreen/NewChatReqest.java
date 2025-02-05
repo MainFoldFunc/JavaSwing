@@ -12,21 +12,21 @@ public class NewChatReqest {
     HttpURLConnection conn = null;
 
     try {
-      // Corrected URL and method call
       URL url = new URL("http://localhost:8080/newChatReqest");
       conn = (HttpURLConnection) url.openConnection();
 
-      // Corrected method names
       conn.setRequestMethod("POST");
       conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
       conn.setRequestProperty("Accept", "application/json");
       conn.setDoOutput(true);
 
-      System.out.println(userR);
-      // Corrected string formatting with proper escaping
+      // Printing for debugging
+      System.out.println("Sending new chat request for userR: " + userR);
+
+      // Remove quotes around true so that Accept is a boolean in JSON
       String jsonInputString = String.format(
-        "{\"userS\": \"%s\", \"userR\": \"%s\", \"accept\": \"true\"}",
-        userS.replace("\"", "\\\""), userR.replace("\"", "\\\"")
+          "{\"UserS\": \"%s\", \"UserR\": \"%s\", \"Accept\": true}",
+          userS.replace("\"", "\\\""), userR.replace("\"", "\\\"")
       );
 
       // Sending JSON request
@@ -40,9 +40,9 @@ public class NewChatReqest {
       int responseCode = conn.getResponseCode();
       System.out.println("Response code: " + responseCode);
 
-      // Handling the server response
-      if (responseCode == HttpURLConnection.HTTP_OK) {
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+      if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
+        try (BufferedReader br = new BufferedReader(
+                 new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
           StringBuilder response = new StringBuilder();
           String line;
           while ((line = br.readLine()) != null) {
@@ -50,7 +50,6 @@ public class NewChatReqest {
           }
           String responseBody = response.toString();
           System.out.println("Response from the server: " + responseBody);
-
           return true;
         }
       } else {
@@ -68,3 +67,4 @@ public class NewChatReqest {
     }
   }
 }
+

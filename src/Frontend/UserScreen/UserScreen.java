@@ -7,11 +7,11 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 
 public class UserScreen extends JFrame implements ActionListener {
-  private InputFrame SearchUsers;
-  private JButton SendSearchUsers;
-  private JPanel ResultArea;
-  private String selectedUser;  // Stores the selected user
-  private String userS;         // Stores the username passed in the constructor
+  public InputFrame SearchUsers;
+  public Button SendSearchUsers;
+  public JPanel ResultArea;
+  public String selectedUser;  // Stores the selected user
+  public String userS;         // Stores the username passed in the constructor
 
   public UserScreen(String UserS) {
     this.userS = UserS;  // Save the parameter for later use
@@ -27,8 +27,7 @@ public class UserScreen extends JFrame implements ActionListener {
     SearchUsers = new InputFrame("Search for users to chat with", 100, 100, 200, 50);
     this.add(SearchUsers);
 
-    SendSearchUsers = new JButton("Search");
-    SendSearchUsers.setBounds(310, 100, 150, 50);
+    SendSearchUsers = new Button("Search", 310, 100, 150, 50);
     SendSearchUsers.addActionListener(this);
     this.add(SendSearchUsers);
 
@@ -64,19 +63,5 @@ public class UserScreen extends JFrame implements ActionListener {
       this.repaint();
     }
   }
-
-  public void sendChatRequest() {
-    // Ensure selectedUser is set
-    if (selectedUser != null && !selectedUser.isEmpty()) {
-      NewChatReqest request = new NewChatReqest();
-      boolean status = request.newChatRequest(this.userS, selectedUser);
-      if (status) {
-        System.out.println("Request sent!");
-      } else {
-        System.out.println("Something went wrong, try again later");
-      }
-    } else {
-      System.out.println("No user selected. Please select a user from the list.");
-    }
-  }
 }
+

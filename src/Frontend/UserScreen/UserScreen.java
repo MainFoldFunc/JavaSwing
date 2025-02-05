@@ -9,9 +9,10 @@ import java.util.List;
 public class UserScreen extends JFrame implements ActionListener {
   private InputFrame SearchUsers;
   private Button SendSearchUsers;
-  private JPanel ResultArea; // Now using UserListPanel
+  private JPanel ResultArea;
+  private String selectedUser;  // Variable to store the selected user
 
-  public UserScreen() {
+  public UserScreen(String UserS) {
     this.setSize(1920, 1080);
     this.setTitle("Unet");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -36,6 +37,13 @@ public class UserScreen extends JFrame implements ActionListener {
     this.setVisible(true);
   }
 
+  // This method will be called from UserListPanel when a user is selected
+  public void setSelectedUser(String user) {
+    this.userR= user;
+    System.out.println("Selected User: " + selectedUser);  // Display selected user in console
+    // You can perform further actions here like opening a chat, etc.
+  }
+
   @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == SendSearchUsers) {
@@ -47,10 +55,18 @@ public class UserScreen extends JFrame implements ActionListener {
 
       // Remove old results and add new UserListPanel
       this.remove(ResultArea);
-      ResultArea = new UserListPanel(100, 200, 400, 600, CorrectUsersList);
+      ResultArea = new UserListPanel(100, 200, 400, 600, CorrectUsersList, this);  // Pass parent window reference
       this.add(ResultArea);
       this.revalidate();
       this.repaint();
+      NewChatReqest reqest = new NewChatReqest();
+      boolean status = request.newChatReqest(UserS, UserR);
+      if status != false {
+        System.out.println("Reqest sent! ")
+      }
+      else {
+        System.out.println("Something went wrong try again later");
+      }
     }
   }
 }

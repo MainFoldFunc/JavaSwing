@@ -7,7 +7,11 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 
 class UserListPanel extends JPanel {
-  public UserListPanel(int x, int y, int width, int height, List<String> userList) {
+  private UserScreen parentWindow;
+
+  // Constructor with UserScreen reference
+  public UserListPanel(int x, int y, int width, int height, List<String> userList, UserScreen parentWindow) {
+    this.parentWindow = parentWindow;  // Store the reference of parent window
     this.setLayout(new GridLayout(0, 2, 10, 10)); // Two columns: username | button
     this.setBounds(x, y, width, height);
     this.setBackground(new Color(117, 69, 109));
@@ -22,7 +26,8 @@ class UserListPanel extends JPanel {
       chatButton.addActionListener(new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          System.out.println("User selected: " + user); // Print the username
+          // Set selected user in the parent window
+          parentWindow.setSelectedUser(user);  // Call method from UserScreen
         }
       });
 

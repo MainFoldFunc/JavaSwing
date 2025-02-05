@@ -85,7 +85,7 @@ public class UnetFrameLogin extends JFrame implements ActionListener {
       this.dispose(); // Close login window
     } else if (loggedIn) {
       System.out.println("Logged in as A normal user");
-      new UserScreen(Login);
+      new UserScreen(loginText);
       this.dispose();
     } else {
       JOptionPane.showMessageDialog(this, "Incorrect login or password.", "Error", JOptionPane.ERROR_MESSAGE);

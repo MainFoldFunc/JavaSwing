@@ -8,11 +8,14 @@ import java.util.List;
 
 public class UserScreen extends JFrame implements ActionListener {
   private InputFrame SearchUsers;
-  private Button SendSearchUsers;
+  private JButton SendSearchUsers;
   private JPanel ResultArea;
-  private String selectedUser;  // Variable to store the selected user
+  private String selectedUser;  // Stores the selected user
+  private String userS;         // Stores the username passed in the constructor
 
   public UserScreen(String UserS) {
+    this.userS = UserS;  // Save the parameter for later use
+
     this.setSize(1920, 1080);
     this.setTitle("Unet");
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -24,7 +27,8 @@ public class UserScreen extends JFrame implements ActionListener {
     SearchUsers = new InputFrame("Search for users to chat with", 100, 100, 200, 50);
     this.add(SearchUsers);
 
-    SendSearchUsers = new Button("Search", 310, 100, 150, 50);
+    SendSearchUsers = new JButton("Search");
+    SendSearchUsers.setBounds(310, 100, 150, 50);
     SendSearchUsers.addActionListener(this);
     this.add(SendSearchUsers);
 
@@ -39,9 +43,8 @@ public class UserScreen extends JFrame implements ActionListener {
 
   // This method will be called from UserListPanel when a user is selected
   public void setSelectedUser(String user) {
-    this.userR= user;
-    System.out.println("Selected User: " + selectedUser);  // Display selected user in console
-    // You can perform further actions here like opening a chat, etc.
+    this.selectedUser = user;
+    System.out.println("Selected User: " + selectedUser);
   }
 
   @Override
@@ -59,15 +62,21 @@ public class UserScreen extends JFrame implements ActionListener {
       this.add(ResultArea);
       this.revalidate();
       this.repaint();
-      NewChatReqest reqest = new NewChatReqest();
-      boolean status = request.newChatReqest(UserS, UserR);
-      if status != false {
-        System.out.println("Reqest sent! ")
+    }
+  }
+
+  public void sendChatRequest() {
+    // Ensure selectedUser is set
+    if (selectedUser != null && !selectedUser.isEmpty()) {
+      NewChatReqest request = new NewChatReqest();
+      boolean status = request.newChatRequest(this.userS, selectedUser);
+      if (status) {
+        System.out.println("Request sent!");
+      } else {
+        System.out.println("Something went wrong, try again later");
       }
-      else {
-        System.out.println("Something went wrong try again later");
-      }
+    } else {
+      System.out.println("No user selected. Please select a user from the list.");
     }
   }
 }
-

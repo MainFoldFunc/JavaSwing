@@ -1,4 +1,5 @@
 package UserScreen;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -7,33 +8,39 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class NewChatReqest {
-  public boolean newChatReqest(String userS, Strin userR) {
+  public boolean newChatRequest(String userS, String userR) {
     HttpURLConnection conn = null;
 
     try {
-      URL url = new URL("http:/localhost:8080/newChatReqest");
-      conn = (HttpURLConnection) url.OpenConnection();
+      // Corrected URL and method call
+      URL url = new URL("http://localhost:8080/newChatReqest");
+      conn = (HttpURLConnection) url.openConnection();
 
-      conn.setReqestMethod("POST");
-      conn.setReqestProperty("Content-Type", "application/json; charset=utf_8")
-      conn.setReqestProperty("Accept", "application/json");
+      // Corrected method names
+      conn.setRequestMethod("POST");
+      conn.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+      conn.setRequestProperty("Accept", "application/json");
       conn.setDoOutput(true);
 
+      System.out.println(userR);
+      // Corrected string formatting with proper escaping
       String jsonInputString = String.format(
-        "{\"userS\": \"%s\", \"userR\": \"%s\"}",
-        userS.replace("\"", "\\\"");
-        userR.replace("\"", "\\\"");
+        "{\"userS\": \"%s\", \"userR\": \"%s\", \"accept\": \"true\"}",
+        userS.replace("\"", "\\\""), userR.replace("\"", "\\\"")
       );
 
+      // Sending JSON request
       try (OutputStream os = conn.getOutputStream()) {
-        byte[] input = json.InputString.getBytes(StandardCharsets.UTF_8);
+        byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
         os.write(input, 0, input.length);
-        System.out.println("Reqest for new chat sent");
+        System.out.println("Request for new chat sent");
       }
 
+      // Checking the response code
       int responseCode = conn.getResponseCode();
       System.out.println("Response code: " + responseCode);
 
+      // Handling the server response
       if (responseCode == HttpURLConnection.HTTP_OK) {
         try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
           StringBuilder response = new StringBuilder();
@@ -42,18 +49,18 @@ public class NewChatReqest {
             response.append(line);
           }
           String responseBody = response.toString();
-          System.out.println("Response from a server: " + responseBody);
+          System.out.println("Response from the server: " + responseBody);
 
           return true;
         }
       } else {
-        System.err.println("Reqest for Conv failed");
+        System.err.println("Request for conversation failed");
         return false;
       }
     } catch (Exception e) {
-      System.err.println("Reqest failed: " + e.getMessage());
+      System.err.println("Request failed: " + e.getMessage());
       e.printStackTrace();
-      return false
+      return false;
     } finally {
       if (conn != null) {
         conn.disconnect();
@@ -61,5 +68,3 @@ public class NewChatReqest {
     }
   }
 }
-
-

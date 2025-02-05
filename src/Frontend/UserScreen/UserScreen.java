@@ -9,7 +9,7 @@ import java.util.List;
 public class UserScreen extends JFrame implements ActionListener {
   private InputFrame SearchUsers;
   private Button SendSearchUsers;
-  private TextField ResultArea; // Using your custom TextField class
+  private JPanel ResultArea; // Now using UserListPanel
 
   public UserScreen() {
     this.setSize(1920, 1080);
@@ -27,8 +27,10 @@ public class UserScreen extends JFrame implements ActionListener {
     SendSearchUsers.addActionListener(this);
     this.add(SendSearchUsers);
 
-    // Using the custom TextField (which is now a JTextArea)
-    ResultArea = new TextField(100, 200, 400, 900);
+    // Placeholder panel (empty at start)
+    ResultArea = new JPanel();
+    ResultArea.setBounds(100, 200, 400, 600);
+    ResultArea.setBackground(new Color(117, 69, 109));
     this.add(ResultArea);
 
     this.setVisible(true);
@@ -43,11 +45,12 @@ public class UserScreen extends JFrame implements ActionListener {
       HandleSearchUsers search = new HandleSearchUsers();
       List<String> CorrectUsersList = search.handleSearchUsers(UserToFind);
 
-      // Display user list in the custom TextField (multi-line support)
-      ResultArea.setText(""); // Clear previous results
-      for (String user : CorrectUsersList) {
-        ResultArea.append(user + "\n"); // Now works because TextField extends JTextArea
-      }
+      // Remove old results and add new UserListPanel
+      this.remove(ResultArea);
+      ResultArea = new UserListPanel(100, 200, 400, 600, CorrectUsersList);
+      this.add(ResultArea);
+      this.revalidate();
+      this.repaint();
     }
   }
 }
